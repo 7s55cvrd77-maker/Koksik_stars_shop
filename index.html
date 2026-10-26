@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Star Shop</title>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #0f1117;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 42px;
+            margin-top: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 8px 0 5px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #8f96a3;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: #191c24;
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 9px;
+            color: #aeb5c2;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 0;
+            border-radius: 12px;
+            outline: none;
+            background: #252934;
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        input::placeholder {
+            color: #707784;
+        }
+
+        .stars {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .star-button {
+            padding: 16px 10px;
+            border: 2px solid transparent;
+            border-radius: 13px;
+            background: #252934;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .star-button.selected {
+            border-color: #ffd43b;
+            background: #302d1c;
+        }
+
+        .price {
+            text-align: center;
+            margin: 22px 0;
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        #price {
+            color: #ffd43b;
+        }
+
+        .buy-button {
+            width: 100%;
+            padding: 17px;
+            border: 0;
+            border-radius: 14px;
+            background: #ffd43b;
+            color: #111111;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .buy-button:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="logo">⭐</div>
+
+        <h1>Star Shop</h1>
+
+        <div class="subtitle">
+            Покупка Telegram Stars
+        </div>
+
+        <div class="card">
+            <label class="label" for="username">
+                Telegram username
+            </label>
+
+            <input
+                id="username"
+                type="text"
+                placeholder="@username"
+                autocomplete="off"
+            >
+        </div>
+
+        <div class="card">
+            <label class="label">
+                Выберите количество Stars
+            </label>
+
+            <div class="stars">
+
+                <button
+                    class="star-button"
+                    type="button"
+                    onclick="selectStars(50, this)"
+                >
+                    ⭐ 50
+                </button>
+
+                <button
+                    class="star-button"
+                    type="button"
+                    onclick="selectStars(100, this)"
+                >
+                    ⭐ 100
+                </button>
+
+                <button
+                    class="star-button"
+                    type="button"
+                    onclick="selectStars(250, this)"
+                >
+                    ⭐ 250
+                </button>
+
+                <button
+                    class="star-button"
+                    type="button"
+                    onclick="selectStars(500, this)"
+                >
+                    ⭐ 500
+                </button>
+
+            </div>
+        </div>
+
+        <div class="price">
+            К оплате:
+            <span id="price">0 ₽</span>
+        </div>
+
+        <button
+            class="buy-button"
+            type="button"
+            onclick="buyStars()"
+        >
+            Купить ⭐
+        </button>
+
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+
+        tg.ready();
+        tg.expand();
+
+        let selectedStars = 0;
+
+        const prices = {
+            50: 50,
+            100: 100,
+            250: 250,
+            500: 500
+        };
+
+        function selectStars(amount, button) {
+            selectedStars = amount;
+
+            const buttons = document.querySelectorAll(".star-button");
+
+            buttons.forEach(function (item) {
+                item.classList.remove("selected");
+            });
+
+            button.classList.add("selected");
+
+            document.getElementById("price").textContent =
+                prices[amount] + " ₽";
+        }
+
+        function buyStars() {
+            const usernameInput =
+                document.getElementById("username");
+
+            const username =
+                usernameInput.value.trim();
+
+            if (username === "") {
+                alert("Введите Telegram username");
+                return;
+            }
+
+            if (selectedStars === 0) {
+                alert("Выберите количество Stars");
+                return;
+            }
+
+            alert(
+                "Заказ создан!\n\n" +
+                "Пользователь: " + username + "\n" +
+                "Stars: " + selectedStars + "\n" +
+                "Сумма: " + prices[selectedStars] + " ₽"
+            );
+        }
+    </script>
+
+</body>
+</html>
